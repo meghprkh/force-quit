@@ -23,7 +23,9 @@ function init() {
 }
 
 function enable() {
-	Main.panel._leftBox.insert_child_at_index(button, -1);
+	let appMenu=Main.panel.statusArea.appMenu.actor.get_parent();
+	Main.panel._leftBox.insert_child_above(button, appMenu);
+	/*change this to below if you want to add it before the appmenu button*/
 }
 
 function disable() {
