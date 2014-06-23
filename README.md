@@ -12,6 +12,12 @@ If you click it by mistake right click to undo or click on the panel.
 
 You can customize its position by tweaking line 27 of extension.js
 
+
+Tip
+=====
+
+You can right-click anywhere or click on the top panel to abort the kill.
+
 Installation
 ============
 
