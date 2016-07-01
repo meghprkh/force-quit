@@ -1,22 +1,22 @@
 force-quit
 ==========
 
-Gnome Shell Extension To Add Force Quit button
+Gnome Shell Extension to add Force Quit Button
 
 About
 =====
 
 Adds a force quit button which launches xkill.
 
-If you click it by mistake right click to undo or click on the panel.
+On accidental click, right click to undo or click on the panel.
 
-You can customize its position by tweaking line 27 of extension.js
+Customize position by tweaking line 27 of extension.js
 
 
 Tip
 =====
 
-You can right-click anywhere or click on the top panel to abort the kill.
+Right-click anywhere or click on the top panel to abort the kill.
 
 Installation
 ============
