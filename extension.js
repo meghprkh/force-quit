@@ -7,13 +7,16 @@ const GLib = imports.gi.GLib;
 let button;
 
 function init() {
-    button = new St.Bin({ style_class: 'panel-button',
+    Gtk.IconTheme.get_default().append_search_path(Meta.dir.get_child('icons').get_path());
+
+    button = new St.Bin({ name: 'force-quit',
+                          style_class: 'panel-button',
                           reactive: true,
                           can_focus: true,
                           x_fill: true,
                           y_fill: false,
                           track_hover: true });
-    let icon = new St.Icon({ icon_name: 'window-close',
+    let icon = new St.Icon({ icon_name: 'force-quit-symbolic',
                              style_class: 'system-status-icon' });
 
     button.set_child(icon);
@@ -23,11 +26,9 @@ function init() {
 }
 
 function enable() {
-	let appMenu=Main.panel.statusArea.appMenu.actor.get_parent();
-	Main.panel._leftBox.insert_child_above(button, appMenu);
-	/*change this to below if you want to add it before the appmenu button*/
+    Main.panel._rightBox.insert_child_at_index(button, 1);
 }
 
 function disable() {
-    Main.panel._leftBox.remove_child(button);
+    Main.panel._rightBox.remove_child(button);
 }
