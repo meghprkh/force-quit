@@ -16,24 +16,31 @@ function init() {
                           x_fill: true,
                           y_fill: false,
                           track_hover: true });
-    let icon = new St.Icon({ 
+    let icon = new St.Icon({
                     // icon_name: 'window-close',
                     icon_name: 'force-quit-symbolic',
                     style_class: 'system-status-icon' });
 
     button.set_child(icon);
-    button.connect('button-release-event',   function () {
-	GLib.spawn_command_line_async('xkill');
-        });
+    button.connect('button-release-event', function () {
+        GLib.spawn_command_line_async('xkill');
+    });
 }
 
 function enable() {
-	// let appMenu=Main.panel.statusArea.appMenu.actor.get_parent();
-	// Main.panel._leftBox.insert_child_above(button, appMenu);
+    // The default location was changed to right panel instead of left,
+    // Uncomment the following lines and comment the last line to switch back
+    // to the old behaviour
+    // let appMenu=Main.panel.statusArea.appMenu.actor.get_parent();
+    // Main.panel._leftBox.insert_child_above(button, appMenu);
     // change this to below if you want to add it before the appmenu button
     Main.panel._rightBox.insert_child_at_index(button, 1);
 }
 
 function disable() {
+    // The default location was changed to right panel instead of left,
+    // Uncomment the following lines and comment the last line to switch back
+    // to the old behaviour
+    // Main.panel._leftBox.remove_child(button);
     Main.panel._rightBox.remove_child(button);
 }
