@@ -16,8 +16,10 @@ function init() {
                           x_fill: true,
                           y_fill: false,
                           track_hover: true });
-    let icon = new St.Icon({ icon_name: 'force-quit-symbolic',
-                             style_class: 'system-status-icon' });
+    let icon = new St.Icon({ 
+                    // icon_name: 'window-close',
+                    icon_name: 'force-quit-symbolic',
+                    style_class: 'system-status-icon' });
 
     button.set_child(icon);
     button.connect('button-release-event',   function () {
@@ -26,6 +28,9 @@ function init() {
 }
 
 function enable() {
+	// let appMenu=Main.panel.statusArea.appMenu.actor.get_parent();
+	// Main.panel._leftBox.insert_child_above(button, appMenu);
+    // change this to below if you want to add it before the appmenu button
     Main.panel._rightBox.insert_child_at_index(button, 1);
 }
 
