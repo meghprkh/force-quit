@@ -3,6 +3,10 @@ const St = imports.gi.St;
 const Main = imports.ui.main;
 
 const GLib = imports.gi.GLib;
+const Gtk = imports.gi.Gtk;
+
+const ExtensionUtils = imports.misc.extensionUtils;
+const Meta = ExtensionUtils.getCurrentExtension();
 
 let button;
 
