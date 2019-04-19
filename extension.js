@@ -3,12 +3,18 @@ const St = imports.gi.St;
 const Main = imports.ui.main;
 
 const GLib = imports.gi.GLib;
+const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Meta = ExtensionUtils.getCurrentExtension();
 
 let button;
+
+function _getCustIcon(icon_name) {
+   let gicon = Gio.icon_new_for_string( Meta.dir.get_child('icons').get_path() + "/" + icon_name + ".svg" );
+   return gicon;
+}
 
 function init() {
     Gtk.IconTheme.get_default().append_search_path(Meta.dir.get_child('icons').get_path());
@@ -22,7 +28,7 @@ function init() {
                           track_hover: true });
     let icon = new St.Icon({
                     // icon_name: 'window-close',
-                    icon_name: 'force-quit-symbolic',
+                    gicon: _getCustIcon('force-quit-symbolic'),
                     style_class: 'system-status-icon' });
 
     button.set_child(icon);
