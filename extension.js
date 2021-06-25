@@ -1,4 +1,4 @@
-const Lang = imports.lang;
+const GObject = imports.gi.GObject;
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -14,12 +14,10 @@ const ButtonName = "ForceQuitButton";
 
 let button;
 
-const ForceQuitButton = new Lang.Class({
-    Name: ButtonName,
-    Extends: PanelMenu.Button,
-
-    _init: function () {
-        this.parent(0.0, ButtonName);
+let ForceQuitButton = GObject.registerClass(
+class ForceQuitButton extends PanelMenu.Button {
+    _init() {
+        super._init(0.0, ButtonName)
 
         let icon = new St.Icon({
             // icon_name: 'window-close',
@@ -31,14 +29,14 @@ const ForceQuitButton = new Lang.Class({
         this.connect("button-release-event", function () {
             GLib.spawn_command_line_async("xkill");
         });
-    },
+    }
 
-    _getCustIcon: function (icon_name) {
+    _getCustIcon(icon_name) {
         let gicon = Gio.icon_new_for_string(
             Meta.dir.get_child("icons").get_path() + "/" + icon_name + ".svg"
         );
         return gicon;
-    },
+    }
 });
 
 function enable() {
