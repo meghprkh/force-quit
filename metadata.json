@@ -3,7 +3,8 @@
   "description": "Adds a force quit button which launches xkill.\nOn accidental click, right click to undo or click on the panel.\nCustomize position by tweaking line 47 of extension.js",
   "name": "Force Quit",
   "shell-version": [
-    "40"
+    "40",
+    "41"
   ],
   "url": "https://github.com/meghprkh/force-quit/",
   "uuid": "fq@megh",
