@@ -14,6 +14,9 @@ const ButtonName = "ForceQuitButton";
 
 let button;
 
+const Selection = Meta.imports.selection;
+
+
 let ForceQuitButton = GObject.registerClass(
 class ForceQuitButton extends PanelMenu.Button {
     _init() {
@@ -26,8 +29,8 @@ class ForceQuitButton extends PanelMenu.Button {
         });
         this.add_child(icon);
 
-        this.connect("button-release-event", function () {
-            GLib.spawn_command_line_async("xkill");
+        this.connect("button-press-event", () => {
+            new Selection.SelectionWindow();
         });
     }
 
