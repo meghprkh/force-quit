@@ -4,7 +4,8 @@
   "name": "Force Quit",
   "shell-version": [
     "40",
-    "41"
+    "41",
+    "42"
   ],
   "url": "https://github.com/meghprkh/force-quit/",
   "uuid": "fq@megh",
