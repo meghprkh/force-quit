@@ -14,11 +14,15 @@
 This file has been copied from EasyScreenCast/utilnotify.js [1], with minimal
 edits, primary deletions. Edits include removal of settings.
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/master/utilnotify.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/d94dfdd/utilnotify.js
 */
 
-const Lang = imports.lang;
+/* exported NotifyManager */
+'use strict';
+
+const GObject = imports.gi.GObject;
 const Main = imports.ui.main;
+// https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/messageTray.js
 const MessageTray = imports.ui.messageTray;
 const Clutter = imports.gi.Clutter;
 const St = imports.gi.St;
@@ -26,59 +30,60 @@ const St = imports.gi.St;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Lib = Me.imports.convenience;
+// const Settings = Me.imports.settings;
+// const Ext = Me.imports.extension;
 
 /**
  * @type {NotifyManager}
  */
-var NotifyManager = new Lang.Class({
-    Name: "NotifyManager",
-
+var NotifyManager = GObject.registerClass({
+    GTypeName: 'ForceQuit_NotifyManager',
+}, class NotifyManager extends GObject.Object {
     /**
      * Create a notify manager
      */
-    _init: function () {
-        Lib.TalkativeLog("-°-init notify manager");
-
-        this.source = new MessageTray.SystemNotificationSource();
-    },
+    _init() {
+        Lib.TalkativeLog('-°-init notify manager');
+    }
 
     /**
      * create notify
      *
-     * @param msg
-     * @param icon
-     * @param sound
-     * @return {MessageTray.Notification}
+     * @param {string} msg the title
+     * @param {Gio.FileIcon} icon the icon
+     * @param {boolean} sound whether to play a sound
+     * @returns {MessageTray.Notification}
      */
-    createNotify: function (msg, icon, sound) {
-        Lib.TalkativeLog("-°-create notify :" + msg);
-        var notify = new MessageTray.Notification(this.source, msg, null, {
+    createNotify(msg, icon, sound) {
+        Lib.TalkativeLog(`-°-create notify :${msg}`);
+        var source = new MessageTray.SystemNotificationSource();
+        var notify = new MessageTray.Notification(source, msg, null, {
             gicon: icon,
         });
 
         notify.setTransient(false);
         notify.setResident(true);
 
-        Main.messageTray.add(this.source);
-        this.source.showNotification(notify);
+        Main.messageTray.add(source);
+        source.showNotification(notify);
 
         if (sound) {
             notify.playSound();
         }
 
         return notify;
-    },
+    }
 
     /**
      * update notify
      *
-     * @param notify
-     * @param msg
-     * @param icon
-     * @param sound
+     * @param {MessageTray.Notification} notify the already existing notification to update
+     * @param {string} msg the title
+     * @param {Gio.FileIcon} icon the icon
+     * @param {boolean} sound whether to play a sound
      */
-    updateNotify: function (notify, msg, icon, sound) {
-        Lib.TalkativeLog("-°-update notify");
+    updateNotify(notify, msg, icon, sound) {
+        Lib.TalkativeLog('-°-update notify');
 
         notify.update(msg, null, {
             gicon: icon,
@@ -87,20 +92,20 @@ var NotifyManager = new Lang.Class({
         if (sound) {
             notify.playSound();
         }
-    },
+    }
 
     /**
      * create alert
      *
-     * @param msg
+     * @param {string} msg the message
      */
-    createAlert: function (msg) {
-        Lib.TalkativeLog("-°-show alert tweener : " + msg);
-        if (true) { // can be replaced by a setting in a future version
+    createAlert(msg) {
+        Lib.TalkativeLog(`-°-show alert tweener : ${msg}`);
+        if (true) { // can be changed to a setting in future versions
             var monitor = Main.layoutManager.focusMonitor;
 
             var text = new St.Label({
-                style_class: "alert-msg",
+                style_class: 'alert-msg',
                 text: msg,
             });
             text.opacity = 255;
@@ -121,5 +126,5 @@ var NotifyManager = new Lang.Class({
                 },
             });
         }
-    },
+    }
 });

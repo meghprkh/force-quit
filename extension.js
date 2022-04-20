@@ -52,4 +52,5 @@ function enable() {
 
 function disable() {
     button.destroy();
+    button = null;
 }

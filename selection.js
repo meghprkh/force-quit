@@ -22,11 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*
 This file has been copied from EasyScreenCast/selection.js [1], with minimal
-edits, primary deletions. Edits include right-click aborting, force-quitting,
-and deletion of SelectionArea/SelectionMonitor.
+edits. Edits include right-click aborting, force-quitting, and renaming
+of classes. Also removed classes SelectionArea, SelectionDesktop & AreaRecording
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/master/selection.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/4f9453f/selection.js
 */
+
+/* exported SelectionWindow */
+'use strict';
 
 const GObject = imports.gi.GObject;
 const Signals = imports.signals;
@@ -52,7 +55,7 @@ const DisplayApi = Me.imports.display_module.DisplayApi;
  * @type {Lang.Class}
  */
 const Capture = GObject.registerClass({
-    GTypeName: 'EasyScreenCast_Capture',
+    GTypeName: 'ForceQuit_Capture',
 }, class Capture extends GObject.Object {
     /**
      * @private
@@ -98,7 +101,8 @@ const Capture = GObject.registerClass({
 
         this._setCaptureCursor();
 
-        Main.sessionMode.connect('updated', () => this._updateDraw());
+        // Commented out since used only in debugging
+        // Main.sessionMode.connect('updated', () => this._updateDraw());
     }
 
     /**
@@ -214,7 +218,7 @@ const Capture = GObject.registerClass({
 Signals.addSignalMethods(Capture.prototype);
 
 var SelectionWindow = GObject.registerClass({
-    GTypeName: 'EasyScreenCast_SelectionWindow',
+    GTypeName: 'ForceQuit_SelectionWindow',
 }, class SelectionWindow extends GObject.Object {
     /**
      * @private
@@ -229,7 +233,7 @@ var SelectionWindow = GObject.registerClass({
 
         let CtrlNotify = new UtilNotify.NotifyManager();
         CtrlNotify.createAlert(
-            _('Select a window for recording or press [ESC] to abort')
+            _('Select a window to kill or press [ESC] to abort')
         );
     }
 
@@ -249,6 +253,7 @@ var SelectionWindow = GObject.registerClass({
         } else {
             this._clearHighlight();
         }
+
 
         if (type === Clutter.EventType.BUTTON_PRESS) {
             if (event.get_button() === Clutter.BUTTON_SECONDARY) {
@@ -294,7 +299,7 @@ Signals.addSignalMethods(SelectionWindow.prototype);
  * @param {number} y2 bottom position
  * @returns {{x: number, y: number, w: number, h: number}}
  */
- function _getRectangle(x1, y1, x2, y2) {
+function _getRectangle(x1, y1, x2, y2) {
     return {
         x: Math.min(x1, x2),
         y: Math.min(y1, y2),

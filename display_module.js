@@ -2,7 +2,7 @@
 This file has been copied from EasyScreenCast/display_module.js [1], with no
 edits. We primarily need the set_cursor method as it is used in selection.js
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/master/display_module.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/e3a359f/display_module.js
 */
 
 
