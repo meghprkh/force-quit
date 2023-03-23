@@ -25,7 +25,7 @@ This file has been copied from EasyScreenCast/selection.js [1], with minimal
 edits. Edits include right-click aborting, force-quitting, and renaming
 of classes. Also removed classes SelectionArea, SelectionDesktop & AreaRecording
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/c065c04/selection.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/2b26b6d/selection.js
 */
 
 /* exported SelectionWindow */
@@ -112,16 +112,6 @@ const Capture = GObject.registerClass({
         } else {
             Lib.TalkativeLog('-£-Main.pushModal() === false');
         }
-
-        // Commented out since used only in debugging
-        // Main.sessionMode.connect('updated', () => this._updateDraw());
-    }
-
-    /**
-     * @private
-     */
-    _updateDraw() {
-        Lib.TalkativeLog('-£-update draw capture');
     }
 
     /**
