@@ -5,14 +5,12 @@ edits. We primarily need the set_cursor method as it is used in selection.js
 [1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/e3a359f/display_module.js
 */
 
-
-/* exported DisplayApi */
 'use strict';
 
 /**
  * @type {{_display(): Meta_Display, number_of_displays(): int}}
  */
-var DisplayApi = {
+export const DisplayApi = {
     /**
      * Returns the Wayland display or screen
      *

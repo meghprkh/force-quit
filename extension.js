@@ -1,26 +1,24 @@
-const GObject = imports.gi.GObject;
-const St = imports.gi.St;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
+'use strict';
 
-const GLib = imports.gi.GLib;
-const Gio = imports.gi.Gio;
-const Gtk = imports.gi.Gtk;
+import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
+import St from 'gi://St';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Meta = ExtensionUtils.getCurrentExtension();
+import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+
+import * as Selection from './selection.js';
 
 const ButtonName = "ForceQuitButton";
 
-let button;
-
-const Selection = Meta.imports.selection;
-
-
 let ForceQuitButton = GObject.registerClass(
 class ForceQuitButton extends PanelMenu.Button {
-    _init() {
+    _init(extensionPath) {
         super._init(0.0, ButtonName)
+
+        this._extensionPath = extensionPath;
 
         let icon = new St.Icon({
             // icon_name: 'window-close',
@@ -36,21 +34,26 @@ class ForceQuitButton extends PanelMenu.Button {
 
     _getCustIcon(icon_name) {
         let gicon = Gio.icon_new_for_string(
-            Meta.dir.get_child("icons").get_path() + "/" + icon_name + ".svg"
+            `${this._extensionPath}/icons/${icon_name}.svg`
         );
         return gicon;
     }
 });
 
-function enable() {
-    button = new ForceQuitButton();
+export default class ForceQuitExtension extends Extension {
+    enable() {
+        this._button = new ForceQuitButton(this.path);
 
-    // Uncomment following line to get it to the left panel besides AppMenu
-    // Main.panel.addToStatusArea(ButtonName, button, 3, 'left');
-    Main.panel.addToStatusArea(ButtonName, button);
+        // Uncomment following line to get it to the left panel besides AppMenu
+        // Main.panel.addToStatusArea(ButtonName, this._button, 3, 'left');
+        Main.panel.addToStatusArea(ButtonName, this._button);
+    }
+
+    disable() {
+        if (this._button !== null) {
+            this._button.destroy();
+            this._button = null;
+        }
+    }
 }
 
-function disable() {
-    button.destroy();
-    button = null;
-}

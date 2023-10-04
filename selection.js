@@ -28,35 +28,25 @@ of classes. Also removed classes SelectionArea, SelectionDesktop & AreaRecording
 [1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/2b26b6d/selection.js
 */
 
-/* exported SelectionWindow */
 'use strict';
 
-const GObject = imports.gi.GObject;
+import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
+import Clutter from 'gi://Clutter';
+import St from 'gi://St';
+
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+
+// Attention: This module is not available as an ECMAScript Module
+// https://gjs-docs.gnome.org/gjs/signals.md
 const Signals = imports.signals;
-const Meta = imports.gi.Meta;
-const Clutter = imports.gi.Clutter;
-const St = imports.gi.St;
-const Layout = imports.ui.layout;
 
-const Main = imports.ui.main;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import * as Lib from './convenience.js';
+import * as UtilNotify from './utilnotify.js';
+import {DisplayApi} from './display_module.js';
 
-const Domain = imports.gettext.domain(Me.metadata['gettext-domain']);
-const _ = Domain.gettext;
-
-const Lib = Me.imports.convenience;
-// const Ext = Me.imports.extension;
-const UtilNotify = Me.imports.utilnotify;
-const DisplayApi = Me.imports.display_module.DisplayApi;
-
-const Config = imports.misc.config;
-const shellVersion = Number.parseInt(Config.PACKAGE_VERSION.split('.')[0]);
-
-/**
- * @type {Lang.Class}
- */
 const Capture = GObject.registerClass({
     GTypeName: 'ForceQuit_Capture',
 }, class Capture extends GObject.Object {
@@ -93,20 +83,10 @@ const Capture = GObject.registerClass({
         this._grab = Main.pushModal(this._areaSelection);
 
         if (this._grab) {
-            if (shellVersion >= 42) {
-                this._signalCapturedEvent = this._areaSelection.connect(
-                    'captured-event',
-                    this._onCaptureEvent.bind(this)
-                );
-            } else {
-                this._grab = this._areaSelection;
-                this._signalCapturedEvent = global.stage.connect(
-                    'captured-event',
-                    this._onCaptureEvent.bind(this)
-                );
-            }
-
-
+            this._signalCapturedEvent = this._areaSelection.connect(
+                'captured-event',
+                this._onCaptureEvent.bind(this)
+            );
 
             this._setCaptureCursor();
         } else {
@@ -214,7 +194,7 @@ const Capture = GObject.registerClass({
 
 Signals.addSignalMethods(Capture.prototype);
 
-var SelectionWindow = GObject.registerClass({
+export const SelectionWindow = GObject.registerClass({
     GTypeName: 'ForceQuit_SelectionWindow',
 }, class SelectionWindow extends GObject.Object {
     /**

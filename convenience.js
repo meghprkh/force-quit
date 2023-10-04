@@ -36,9 +36,9 @@ edits, primary deletions. Edits include only keeping TalkativeLog.
  * @param {string} msg
  * @constructor
  */
-function TalkativeLog(msg) {
+export function TalkativeLog(msg) {
     // Enable this for testing and logging
     if (false) {
-        log("[ESC]" + msg);
+        console.log("[ESC]" + msg);
     }
 }
