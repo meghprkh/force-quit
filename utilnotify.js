@@ -17,26 +17,22 @@ edits, primary deletions. Edits include removal of settings.
 [1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/d94dfdd/utilnotify.js
 */
 
-/* exported NotifyManager */
 'use strict';
 
-const GObject = imports.gi.GObject;
-const Main = imports.ui.main;
-// https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/messageTray.js
-const MessageTray = imports.ui.messageTray;
-const Clutter = imports.gi.Clutter;
-const St = imports.gi.St;
+import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
+import St from 'gi://St';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Lib = Me.imports.convenience;
-// const Settings = Me.imports.settings;
-// const Ext = Me.imports.extension;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+// https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/messageTray.js
+import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
+
+import * as Lib from './convenience.js';
 
 /**
  * @type {NotifyManager}
  */
-var NotifyManager = GObject.registerClass({
+export const NotifyManager = GObject.registerClass({
     GTypeName: 'ForceQuit_NotifyManager',
 }, class NotifyManager extends GObject.Object {
     /**
@@ -56,8 +52,8 @@ var NotifyManager = GObject.registerClass({
      */
     createNotify(msg, icon, sound) {
         Lib.TalkativeLog(`-°-create notify :${msg}`);
-        var source = new MessageTray.SystemNotificationSource();
-        var notify = new MessageTray.Notification(source, msg, null, {
+        let source = new MessageTray.SystemNotificationSource();
+        let notify = new MessageTray.Notification(source, msg, null, {
             gicon: icon,
         });
 
@@ -102,9 +98,9 @@ var NotifyManager = GObject.registerClass({
     createAlert(msg) {
         Lib.TalkativeLog(`-°-show alert tweener : ${msg}`);
         if (true) { // can be changed to a setting in future versions
-            var monitor = Main.layoutManager.focusMonitor;
+            let monitor = Main.layoutManager.focusMonitor;
 
-            var text = new St.Label({
+            let text = new St.Label({
                 style_class: 'alert-msg',
                 text: msg,
             });
