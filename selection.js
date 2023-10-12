@@ -37,11 +37,8 @@ import St from 'gi://St';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-// Attention: This module is not available as an ECMAScript Module
-// https://gjs-docs.gnome.org/gjs/signals.md
-const Signals = imports.signals;
-
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
 
 import * as Lib from './convenience.js';
 import * as UtilNotify from './utilnotify.js';
@@ -49,12 +46,14 @@ import {DisplayApi} from './display_module.js';
 
 const Capture = GObject.registerClass({
     GTypeName: 'ForceQuit_Capture',
-}, class Capture extends GObject.Object {
+}, class Capture extends Signals.EventEmitter {
     /**
      * @private
      */
-    _init() {
+    constructor() {
         Lib.TalkativeLog('-£-capture selection init');
+
+        super();
 
         this._mouseDown = false;
 
@@ -192,16 +191,16 @@ const Capture = GObject.registerClass({
     }
 });
 
-Signals.addSignalMethods(Capture.prototype);
-
 export const SelectionWindow = GObject.registerClass({
     GTypeName: 'ForceQuit_SelectionWindow',
-}, class SelectionWindow extends GObject.Object {
+}, class SelectionWindow extends Signals.EventEmitter {
     /**
      * @private
      */
-    _init() {
+    constructor() {
         Lib.TalkativeLog('-£-window selection init');
+
+        super()
 
         this._windows = global.get_window_actors();
         this._capture = new Capture();
@@ -265,9 +264,6 @@ export const SelectionWindow = GObject.registerClass({
         return this.GTypeName;
     }
 });
-
-Signals.addSignalMethods(SelectionWindow.prototype);
-
 
 /**
  * @param {number} x1 left position
