@@ -44,9 +44,7 @@ import * as Lib from './convenience.js';
 import * as UtilNotify from './utilnotify.js';
 import {DisplayApi} from './display_module.js';
 
-const Capture = GObject.registerClass({
-    GTypeName: 'ForceQuit_Capture',
-}, class Capture extends Signals.EventEmitter {
+class Capture extends Signals.EventEmitter {
     /**
      * @private
      */
@@ -189,11 +187,9 @@ const Capture = GObject.registerClass({
     toString() {
         return this.GTypeName;
     }
-});
+}
 
-export const SelectionWindow = GObject.registerClass({
-    GTypeName: 'ForceQuit_SelectionWindow',
-}, class SelectionWindow extends Signals.EventEmitter {
+export class SelectionWindow extends Signals.EventEmitter {
     /**
      * @private
      */
@@ -263,7 +259,7 @@ export const SelectionWindow = GObject.registerClass({
     toString() {
         return this.GTypeName;
     }
-});
+}
 
 /**
  * @param {number} x1 left position
