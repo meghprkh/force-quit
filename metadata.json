@@ -4,9 +4,9 @@
   "name": "Force Quit",
   "gettext-domain": "fq@megh",
   "shell-version": [
-    "45"
+    "46"
   ],
   "url": "https://github.com/meghprkh/force-quit/",
   "uuid": "fq@megh",
-  "version": 25
+  "version": 26
 }

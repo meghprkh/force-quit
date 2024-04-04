@@ -31,14 +31,15 @@ edits, primary deletions. Edits include only keeping TalkativeLog.
 [1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/master/convenience.js
 */
 
+'use strict';
 
 /**
- * @param {string} msg
- * @constructor
+ * @param {string} msg the message to log
+ * @class
  */
-export function TalkativeLog(msg) {
-    // Enable this for testing and logging
-    if (false) {
-        console.log("[ESC]" + msg);
-    }
+function TalkativeLog(msg) {
+    if (false)
+        console.log(`[ESC]${msg}`);
 }
+
+export {TalkativeLog};

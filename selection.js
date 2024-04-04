@@ -25,7 +25,7 @@ This file has been copied from EasyScreenCast/selection.js [1], with minimal
 edits. Edits include right-click aborting, force-quitting, and renaming
 of classes. Also removed classes SelectionArea, SelectionDesktop & AreaRecording
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/2b26b6d/selection.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/e2ec24d/selection.js
 */
 
 'use strict';
@@ -34,24 +34,22 @@ import GObject from 'gi://GObject';
 import Meta from 'gi://Meta';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
-
-import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
-
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
+
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Lib from './convenience.js';
 import * as UtilNotify from './utilnotify.js';
 import {DisplayApi} from './display_module.js';
 
+/**
+ * @type {Capture}
+ */
 class Capture extends Signals.EventEmitter {
-    /**
-     * @private
-     */
     constructor() {
-        Lib.TalkativeLog('-£-capture selection init');
-
         super();
+        Lib.TalkativeLog('-£-capture selection init');
 
         this._mouseDown = false;
 
@@ -66,7 +64,7 @@ class Capture extends Signals.EventEmitter {
             y: -10,
         });
 
-        Main.uiGroup.add_actor(this._areaSelection);
+        Main.uiGroup.add_child(this._areaSelection);
 
         this._areaResolution = new St.Label({
             style_class: 'area-resolution',
@@ -75,7 +73,7 @@ class Capture extends Signals.EventEmitter {
         this._areaResolution.opacity = 255;
         this._areaResolution.set_position(0, 0);
 
-        Main.uiGroup.add_actor(this._areaResolution);
+        Main.uiGroup.add_child(this._areaResolution);
 
         this._grab = Main.pushModal(this._areaSelection);
 
@@ -112,9 +110,8 @@ class Capture extends Signals.EventEmitter {
      */
     _onCaptureEvent(actor, event) {
         if (event.type() === Clutter.EventType.KEY_PRESS) {
-            if (event.get_key_symbol() === Clutter.KEY_Escape) {
+            if (event.get_key_symbol() === Clutter.KEY_Escape)
                 this._stop();
-            }
         }
 
         this.emit('captured-event', event);
@@ -123,14 +120,14 @@ class Capture extends Signals.EventEmitter {
     /**
      * Draws a on-screen rectangle showing the area that will be captured by screen cast.
      *
-     * @param {Object} rect rectangle
+     * @param {object} rect rectangle
      * @param {number} rect.x left position in pixels
      * @param {number} rect.y top position in pixels
      * @param {number} rect.w width in pixels
      * @param {number} rect.h height in pixels
      * @param {boolean} showResolution whether to display the size of the selected area
      */
-    drawSelection({ x, y, w, h }, showResolution) {
+    drawSelection({x, y, w, h}, showResolution) {
         this._areaSelection.set_position(x, y);
         this._areaSelection.set_size(w, h);
 
@@ -167,11 +164,11 @@ class Capture extends Signals.EventEmitter {
     _stop() {
         Lib.TalkativeLog('-£-capture selection stop');
 
-        global.stage.disconnect(this._signalCapturedEvent);
+        this._areaSelection.disconnect(this._signalCapturedEvent);
         this._setDefaultCursor();
-        Main.uiGroup.remove_actor(this._areaSelection);
+        Main.uiGroup.remove_child(this._areaSelection);
         Main.popModal(this._grab);
-        Main.uiGroup.remove_actor(this._areaResolution);
+        Main.uiGroup.remove_child(this._areaResolution);
         this._areaSelection.destroy();
         this.emit('stop');
         this.disconnectAll();
@@ -189,22 +186,21 @@ class Capture extends Signals.EventEmitter {
     }
 }
 
-export class SelectionWindow extends Signals.EventEmitter {
-    /**
-     * @private
-     */
+class SelectionWindow extends Signals.EventEmitter {
     constructor() {
+        super();
         Lib.TalkativeLog('-£-window selection init');
-
-        super()
 
         this._windows = global.get_window_actors();
         this._capture = new Capture();
         this._capture.connect('captured-event', this._onEvent.bind(this));
-        this._capture.connect('stop', this.emit.bind(this, 'stop'));
+        this._capture.connect('stop', () => {
+            this._ctrlNotify.resetAlert();
+            this.emit('stop');
+        });
 
-        let CtrlNotify = new UtilNotify.NotifyManager();
-        CtrlNotify.createAlert(
+        this._ctrlNotify = new UtilNotify.NotifyManager();
+        this._ctrlNotify.createAlert(
             _('Select a window to kill or press [ESC] to abort')
         );
     }
@@ -220,20 +216,18 @@ export class SelectionWindow extends Signals.EventEmitter {
 
         this._selectedWindow = _selectWindow(this._windows, x, y);
 
-        if (this._selectedWindow) {
+        if (this._selectedWindow)
             this._highlightWindow(this._selectedWindow);
-        } else {
+        else
             this._clearHighlight();
-        }
 
 
         if (type === Clutter.EventType.BUTTON_PRESS) {
             if (event.get_button() === Clutter.BUTTON_SECONDARY) {
                 this._capture._stop();
             } else if (this._selectedWindow) {
-                this._capture._stop();
-
                 this._selectedWindow.get_meta_window().kill()
+                this._capture._stop();
             }
         }
     }
@@ -326,3 +320,5 @@ function _selectWindow(windows, x, y) {
 
     return filtered[0];
 }
+
+export {SelectionWindow};

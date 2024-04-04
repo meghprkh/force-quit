@@ -14,32 +14,33 @@
 This file has been copied from EasyScreenCast/utilnotify.js [1], with minimal
 edits, primary deletions. Edits include removal of settings.
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/d94dfdd/utilnotify.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/e2ec24d/utilnotify.js
 */
 
 'use strict';
 
 import GObject from 'gi://GObject';
-import Clutter from 'gi://Clutter';
-import St from 'gi://St';
-
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 // https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/messageTray.js
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
+import St from 'gi://St';
 
 import * as Lib from './convenience.js';
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 /**
  * @type {NotifyManager}
  */
-export const NotifyManager = GObject.registerClass({
+var NotifyManager = GObject.registerClass({
     GTypeName: 'ForceQuit_NotifyManager',
 }, class NotifyManager extends GObject.Object {
     /**
      * Create a notify manager
      */
-    _init() {
+    constructor() {
+        super();
         Lib.TalkativeLog('-°-init notify manager');
+        this._alertWidget = null;
     }
 
     /**
@@ -52,20 +53,23 @@ export const NotifyManager = GObject.registerClass({
      */
     createNotify(msg, icon, sound) {
         Lib.TalkativeLog(`-°-create notify :${msg}`);
-        let source = new MessageTray.SystemNotificationSource();
-        let notify = new MessageTray.Notification(source, msg, null, {
+        var source = new MessageTray.Source({
+            title: _('ForceQuit'),
+        });
+        var notify = new MessageTray.Notification({
+            source,
+            title: msg,
+            body: null,
             gicon: icon,
+            isTransient: false,
+            resident: true,
         });
 
-        notify.setTransient(false);
-        notify.setResident(true);
-
         Main.messageTray.add(source);
-        source.showNotification(notify);
+        source.addNotification(notify);
 
-        if (sound) {
+        if (sound)
             notify.playSound();
-        }
 
         return notify;
     }
@@ -81,13 +85,14 @@ export const NotifyManager = GObject.registerClass({
     updateNotify(notify, msg, icon, sound) {
         Lib.TalkativeLog('-°-update notify');
 
-        notify.update(msg, null, {
+        notify.set({
+            title: msg,
+            body: null,
             gicon: icon,
         });
 
-        if (sound) {
+        if (sound)
             notify.playSound();
-        }
     }
 
     /**
@@ -97,30 +102,50 @@ export const NotifyManager = GObject.registerClass({
      */
     createAlert(msg) {
         Lib.TalkativeLog(`-°-show alert tweener : ${msg}`);
-        if (true) { // can be changed to a setting in future versions
-            let monitor = Main.layoutManager.focusMonitor;
+        if (true) {
+            var monitor = Main.layoutManager.focusMonitor;
 
-            let text = new St.Label({
+            this.resetAlert();
+            this._alertWidget = new St.Label({
                 style_class: 'alert-msg',
+                opacity: 255,
                 text: msg,
             });
-            text.opacity = 255;
-            Main.uiGroup.add_actor(text);
+            Main.uiGroup.add_child(this._alertWidget);
 
-            text.set_position(
-                Math.floor(monitor.width / 2 - text.width / 2),
-                Math.floor(monitor.height / 2 - text.height / 2)
+            this._alertWidget.set_position(
+                Math.floor(monitor.width / 2 - this._alertWidget.width / 2),
+                Math.floor(monitor.height / 2 - this._alertWidget.height / 2)
             );
 
-            text.ease({
+            Lib.TalkativeLog(`-°-show alert tweener : opacity=${this._alertWidget.opacity}`);
+
+            // see org/gnome/shell/ui/environment.js#_easeActor
+            // TODO: for some reason, no transition is created, so the onComplete
+            // callback is called _immediately_
+            /*
+            import Clutter from 'gi://Clutter';
+            this._alertWidget.ease({
                 opacity: 0,
+                duration: 400,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-                duration: 4000,
                 onComplete: () => {
-                    Main.uiGroup.remove_actor(text);
-                    text = null;
+                    Lib.TalkativeLog(`-°-show alert tweener completed: opacity=${this._alertWidget.opacity}`);
+                    Main.uiGroup.remove_child(this._alertWidget);
+                    this._alertWidget = null;
                 },
             });
+            */
+        }
+    }
+
+    resetAlert() {
+        if (this._alertWidget !== null) {
+            this._alertWidget.hide();
+            Main.uiGroup.remove_child(this._alertWidget);
+            this._alertWidget = null;
         }
     }
 });
+
+export {NotifyManager};
