@@ -8,7 +8,7 @@ About
 
 Adds a force quit button.
 
-On accidental click, right click or press [ESC] to undo.
+On accidental click, right click or press <kbd>Esc</kbd> to undo.
 
 Customize position by tweaking line 50 of extension.js
 
@@ -16,7 +16,7 @@ Customize position by tweaking line 50 of extension.js
 Tip
 =====
 
-Right-click anywhere or click on the top panel to abort the kill.
+Right-click anywhere or press <kbd>Esc</kbd> to abort the kill.
 
 Installation
 ============
