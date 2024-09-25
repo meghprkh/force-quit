@@ -28,7 +28,7 @@
 This file has been copied from EasyScreenCast/convenience.js [1], with minimal
 edits, primary deletions. Edits include only keeping TalkativeLog.
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/master/convenience.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/3922633/convenience.js
 */
 
 'use strict';
@@ -37,9 +37,7 @@ edits, primary deletions. Edits include only keeping TalkativeLog.
  * @param {string} msg the message to log
  * @class
  */
-function TalkativeLog(msg) {
+export function TalkativeLog(msg) {
     if (false)
         console.log(`[ESC]${msg}`);
 }
-
-export {TalkativeLog};

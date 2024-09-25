@@ -25,7 +25,7 @@ This file has been copied from EasyScreenCast/selection.js [1], with minimal
 edits. Edits include right-click aborting, force-quitting, and renaming
 of classes. Also removed classes SelectionArea, SelectionDesktop & AreaRecording
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/e2ec24d/selection.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/3922633/selection.js
 */
 
 'use strict';
@@ -186,7 +186,7 @@ class Capture extends Signals.EventEmitter {
     }
 }
 
-class SelectionWindow extends Signals.EventEmitter {
+export class SelectionWindow extends Signals.EventEmitter {
     constructor() {
         super();
         Lib.TalkativeLog('-£-window selection init');
@@ -320,5 +320,3 @@ function _selectWindow(windows, x, y) {
 
     return filtered[0];
 }
-
-export {SelectionWindow};

@@ -14,7 +14,7 @@
 This file has been copied from EasyScreenCast/utilnotify.js [1], with minimal
 edits, primary deletions. Edits include removal of settings.
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/e2ec24d/utilnotify.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/3922633/utilnotify.js
 */
 
 'use strict';
@@ -26,12 +26,13 @@ import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 import St from 'gi://St';
 
 import * as Lib from './convenience.js';
+
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 /**
  * @type {NotifyManager}
  */
-var NotifyManager = GObject.registerClass({
+export const NotifyManager = GObject.registerClass({
     GTypeName: 'ForceQuit_NotifyManager',
 }, class NotifyManager extends GObject.Object {
     /**
@@ -147,5 +148,3 @@ var NotifyManager = GObject.registerClass({
         }
     }
 });
-
-export {NotifyManager};
