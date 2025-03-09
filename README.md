@@ -8,15 +8,10 @@ About
 
 Adds a force quit button.
 
-On accidental click, right click or press <kbd>Esc</kbd> to undo.
+Click the toolbar button, then choose the window you want to force quit.
 
-Customize position by tweaking line 50 of extension.js
+On accidental click, right click anywhere or press <kbd>Esc</kbd> to abort the kill.
 
-
-Tip
-=====
-
-Right-click anywhere or press <kbd>Esc</kbd> to abort the kill.
 
 Installation
 ============
