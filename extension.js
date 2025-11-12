@@ -11,6 +11,13 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
 import * as Selection from './selection.js';
 
+const DBusInterface = `
+<node>
+  <interface name="org.gnome.Shell.Extensions.ForceQuit">
+    <method name="KillWindow"/>
+  </interface>
+</node>`;
+
 const ButtonName = "ForceQuitButton";
 
 let ForceQuitButton = GObject.registerClass(
@@ -28,7 +35,8 @@ class ForceQuitButton extends PanelMenu.Button {
         this.add_child(icon);
 
         this.connect("button-press-event", () => {
-            new Selection.SelectionWindow();
+			log('XXX'); 
+//           new Selection.SelectionWindow();
         });
     }
 
@@ -42,6 +50,9 @@ class ForceQuitButton extends PanelMenu.Button {
 
 export default class ForceQuitExtension extends Extension {
     enable() {
+		this._dbus = Gio.DBusExportedObject.wrapJSObject(DBusInterface, this);
+        this._dbus.export(Gio.DBus.session, '/org/gnome/Shell/Extensions/ForceQuit');
+
         this._button = new ForceQuitButton(this.path);
 
         // Uncomment following line to get it to the left panel besides AppMenu
@@ -50,6 +61,10 @@ export default class ForceQuitExtension extends Extension {
     }
 
     disable() {
+		if(this._dbus){
+			this._dbus.unexport();
+        	this._dbus = null;
+		}
         if (this._button !== null) {
             this._button.destroy();
             this._button = null;
