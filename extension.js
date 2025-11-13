@@ -51,10 +51,6 @@ export default class ForceQuitExtension extends Extension {
     enable() {
         this._button = new ForceQuitButton(this.path);
 
-        // Uncomment following line to get it to the left panel besides AppMenu
-        // Main.panel.addToStatusArea(ButtonName, this._button, 3, 'left');
-        Main.panel.addToStatusArea(ButtonName, this._button);
-      
         // Apply initial state and listen for settings changes
         this._settings = this.getSettings();
         this._updateButtonVisibility();
@@ -62,6 +58,18 @@ export default class ForceQuitExtension extends Extension {
             () => this._updateButtonVisibility()
         );
   
+        // Position the button on the top panel
+        if (this._settings.get_string('button-position') == 'left')
+            Main.panel.addToStatusArea(ButtonName, this._button, 3, 'left');
+        else
+            Main.panel.addToStatusArea(ButtonName, this._button);
+
+        // Redraw button on position change
+        this._settings.connect('changed::button-position', () => {
+            this.disable();
+            this.enable();
+        });
+
         // Export DBus interface
         this._dbus = Gio.DBusExportedObject.wrapJSObject(DBusInterface, this);
         this._dbus.export(Gio.DBus.session, '/org/gnome/Shell/Extensions/ForceQuit');

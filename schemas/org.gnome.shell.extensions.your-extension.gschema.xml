@@ -6,5 +6,10 @@
       <summary>Hide Status Bar Button</summary>
       <description>Hide the Force Quit button from the top panel</description>
     </key>
+    <key name="button-position" type="s">
+      <default>'right'</default>
+      <summary>Button position</summary>
+      <description>Choose whether the Force Quit button is on the left or right side of the top panel.</description>
+    </key>
   </schema>
 </schemalist>
