@@ -3,6 +3,7 @@
   "description": "Adds a force quit button.\nClick the toolbar button, then choose the window you want to force quit.\nOn accidental click, right click anywhere or press [Esc] to abort the kill.",
   "name": "Force Quit",
   "gettext-domain": "fq@megh",
+  "settings-schema": "org.gnome.shell.extensions.forcequit",
   "shell-version": ["46", "47", "48", "49"],
   "url": "https://github.com/meghprkh/force-quit/",
   "uuid": "fq@megh",
