@@ -78,9 +78,9 @@ export default class ForceQuitExtension extends Extension {
     disable() {
         if (this._settingsChangedId) {
              this._settings.disconnect(this._settingsChangedId);
-              this._settingsChangedId = null;
+             this._settingsChangedId = null;
         }
-        if (this._dbus){
+        if (this._dbus) {
             this._dbus.unexport();
             this._dbus = null;
         }

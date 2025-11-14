@@ -59,13 +59,13 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
         this.description = new Gtk.Label({
             label: `
 With the button hidden, the extension can still be launched from scripts via DBus:
-  <tt>
-  gdbus call \\
-    --session \\
-    --dest org.gnome.Shell \\
-    --object-path /org/gnome/Shell/Extensions/ForceQuit \\
-    --method org.gnome.Shell.Extensions.ForceQuit.SelectWindow
-    </tt>`,
+<tt>
+ gdbus call \\
+   --session \\
+   --dest org.gnome.Shell \\
+   --object-path /org/gnome/Shell/Extensions/ForceQuit \\
+   --method org.gnome.Shell.Extensions.ForceQuit.SelectWindow
+</tt>`,
             use_markup: true,
             wrap: true,
             xalign: 0.15
@@ -78,7 +78,7 @@ With the button hidden, the extension can still be launched from scripts via DBu
 
     // Grey out toggleGroup and show description when button is hidden
     _updateVisibility() {
-    this.switchRow.active = this.settings.get_boolean('hide-button');
+        this.switchRow.active = this.settings.get_boolean('hide-button');
         this.toggleGroup.sensitive = !this.switchRow.active;
         if (this.switchRow.active)
             this.description.show();
