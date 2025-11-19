@@ -80,18 +80,11 @@ export default class ForceQuitExtension extends Extension {
              this._settings.disconnect(this._settingsChangedId);
              this._settingsChangedId = null;
         }
-        if (this._dbus) {
-            this._dbus.unexport();
-            this._dbus = null;
-        }
-        if (this._button !== null) {
-            this._button.destroy();
-            this._button = null;
-        }
-        if (this._settings !== null) {
-            // this._settings.destroy();
-            this._settings = null;
-        }
+        this._dbus?.unexport();
+        this._dbus = null;
+        this._button?.destroy();
+        this._button = null;
+        this._settings = null;
     }
 
     SelectWindow() {
