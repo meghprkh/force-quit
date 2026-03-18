@@ -1,0 +1,91 @@
+#
+# Muha Aliss <muhaaliss@pm.me>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: force-quit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-18 08:00+0300\n"
+"PO-Revision-Date: 2026-03-18 08:09+0300\n"
+"Last-Translator: Muha Aliss <muhaaliss@pm.me>\n"
+"Language-Team: Turkish\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 49.0\n"
+
+msgid "Appearance"
+msgstr "Görünüm"
+
+msgid "Configure the extension appearance"
+msgstr "Eklenti görünümünü yapılandır"
+
+msgid "Hide Status Bar Button"
+msgstr "Durum Çubuğu Düğmesini Gizle"
+
+msgid "Hide the Force Quit button from the top panel"
+msgstr "Zorla Kapat düğmesini üst panelden gizle"
+
+msgid "Button position"
+msgstr "Düğme konumu"
+
+msgid "Where to place the button on the top panel"
+msgstr "Düğmenin üst panelde nereye yerleştirileceği"
+
+msgid "Left"
+msgstr "Sol"
+
+msgid "Right"
+msgstr "Sağ"
+
+msgid ""
+"\n"
+"With the button hidden, the extension can still be launched from scripts via "
+"DBus:\n"
+"<tt>\n"
+" gdbus call \\\n"
+"   --session \\\n"
+"   --dest org.gnome.Shell \\\n"
+"   --object-path /org/gnome/Shell/Extensions/ForceQuit \\\n"
+"   --method org.gnome.Shell.Extensions.ForceQuit.SelectWindow\n"
+"</tt>"
+msgstr ""
+"\n"
+"Düğme gizlendiğinde, eklenti hala DBus aracılığıyla betiklerden "
+"başlatılabilir:\n"
+"<tt>\n"
+" gdbus call \\\n"
+"   --session \\\n"
+"   --dest org.gnome.Shell \\\n"
+"   --object-path /org/gnome/Shell/Extensions/ForceQuit \\\n"
+"   --method org.gnome.Shell.Extensions.ForceQuit.SelectWindow\n"
+"</tt>"
+
+msgid "Select a window to kill or press [ESC] to abort"
+msgstr ""
+"Sonlandırmak için bir pencere seç veya iptal etmek için [ESC] tuşuna bas"
+
+msgid "Force Quit"
+msgstr "Zorla Kapat"
+
+msgid "ForceQuit"
+msgstr "Zorla Kapat"
+
+msgid ""
+"Adds a force quit button.\n"
+"Click the toolbar button, then choose the window you want to force quit.\n"
+"On accidental click, right click anywhere or press [Esc] to abort the kill."
+msgstr ""
+"Zorla kapatma düğmesi ekler.\n"
+"Araç çubuğu düğmesine tıkla, ardından zorla kapatmak istediğin pencereyi "
+"seç.\n"
+"Yanlışlıkla tıklarsan, herhangi bir yere sağ tıkla veya iptal etmek için "
+"[Esc] tuşuna bas."
+
+msgid ""
+"Choose whether the Force Quit button is on the left or right side of the top "
+"panel."
+msgstr ""
+"Zorla Kapat düğmesi üst panelin solunda mı yoksa sağında mı olacağını seç."
