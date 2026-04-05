@@ -37,6 +37,7 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Signals from 'resource:///org/gnome/shell/misc/signals.js';
 
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Lib from './convenience.js';
 import * as UtilNotify from './utilnotify.js';
@@ -186,10 +187,8 @@ class Capture extends Signals.EventEmitter {
 }
 
 export class SelectionWindow extends Signals.EventEmitter {
-    constructor(extension) {
+    constructor() {
         super();
-        this._extension = extension;
-        const _ = this._extension ? this._extension.gettext.bind(this._extension) : (s) => s;
         Lib.TalkativeLog('-£-window selection init');
 
         this._windows = global.get_window_actors();
@@ -200,7 +199,7 @@ export class SelectionWindow extends Signals.EventEmitter {
             this.emit('stop');
         });
 
-        this._ctrlNotify = new UtilNotify.NotifyManager(this._extension);
+        this._ctrlNotify = new UtilNotify.NotifyManager();
         this._ctrlNotify.createAlert(
             _('Select a window to kill or press [ESC] to abort')
         );

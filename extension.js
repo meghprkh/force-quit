@@ -22,10 +22,10 @@ const ButtonName = "ForceQuitButton";
 
 let ForceQuitButton = GObject.registerClass(
 class ForceQuitButton extends PanelMenu.Button {
-    _init(extension) {
+    _init(extensionPath) {
         super._init(0.0, ButtonName)
 
-        this._extension = extension;
+        this._extensionPath = extensionPath;
 
         let icon = new St.Icon({
             // icon_name: 'window-close',
@@ -35,13 +35,13 @@ class ForceQuitButton extends PanelMenu.Button {
         this.add_child(icon);
 
         this.connect("button-press-event", () => {
-            new Selection.SelectionWindow(this._extension);
+            new Selection.SelectionWindow();
         });
     }
 
     _getCustIcon(icon_name) {
         let gicon = Gio.icon_new_for_string(
-            `${this._extension.path}/icons/${icon_name}.svg`
+            `${this._extensionPath}/icons/${icon_name}.svg`
         );
         return gicon;
     }
@@ -49,7 +49,7 @@ class ForceQuitButton extends PanelMenu.Button {
 
 export default class ForceQuitExtension extends Extension {
     enable() {
-        this._button = new ForceQuitButton(this);
+        this._button = new ForceQuitButton(this.path);
 
         // Apply initial state and listen for settings changes
         this._settings = this.getSettings();
@@ -88,7 +88,7 @@ export default class ForceQuitExtension extends Extension {
     }
 
     SelectWindow() {
-        new Selection.SelectionWindow(this);
+        new Selection.SelectionWindow();
     }
 
     _updateButtonVisibility() {

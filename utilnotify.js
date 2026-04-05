@@ -27,6 +27,7 @@ import St from 'gi://St';
 
 import * as Lib from './convenience.js';
 
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 /**
  * @type {NotifyManager}
@@ -37,10 +38,8 @@ export const NotifyManager = GObject.registerClass({
     /**
      * Create a notify manager
      */
-    constructor(extension) {
+    constructor() {
         super();
-        this._extension = extension;
-        const _ = this._extension ? this._extension.gettext.bind(this._extension) : (s) => s;
         Lib.TalkativeLog('-°-init notify manager');
         this._alertWidget = null;
     }
@@ -54,7 +53,6 @@ export const NotifyManager = GObject.registerClass({
      * @returns {MessageTray.Notification}
      */
     createNotify(msg, icon, sound) {
-        const _ = this._extension ? this._extension.gettext.bind(this._extension) : (s) => s;
         Lib.TalkativeLog(`-°-create notify :${msg}`);
         var source = new MessageTray.Source({
             title: _('ForceQuit'),

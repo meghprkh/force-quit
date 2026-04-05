@@ -1,31 +1,31 @@
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
-import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
+import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 
 export default class ForceQuitPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        const _ = this.gettext.bind(this);
+
         this.settings = this.getSettings();
-        
+
         // Create a preferences page
         const page = new Adw.PreferencesPage();
         window.add(page);
-        
+
         // Create a preferences group
         const group = new Adw.PreferencesGroup({
             title: _('Appearance'),
             description: _('Configure the extension appearance'),
         });
         page.add(group);
-        
+
         // Create a switch row to hide the button
         this.switchRow = new Adw.SwitchRow({
             title: _('Hide Status Bar Button'),
             subtitle: _('Hide the Force Quit button from the top panel'),
         });
         group.add(this.switchRow);
-        
+
         // Bind the switch to the setting
         this.settings.bind(
             'hide-button',
@@ -37,7 +37,7 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
         // Create another row with two toggles for the button position
         const toggleRow = new Adw.ActionRow({
             title: _('Button position'),
-            subtitle: _('Where to place the button on the top panel')
+            subtitle: _('Where to place the button on the top panel'),
         });
         group.add(toggleRow);
         this.toggleGroup = new Adw.ToggleGroup({ 'can-shrink': true });
@@ -46,7 +46,7 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
         this.toggleGroup.add(leftToggle);
         const rightToggle = new Adw.Toggle({ name: 'right', label: _('Right') });
         this.toggleGroup.add(rightToggle);
-    
+
         // Bind the switch to the setting
         this.settings.bind(
             'button-position',
@@ -54,7 +54,7 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
             'active_name',
             Gio.SettingsBindFlags.DEFAULT
         );
-    
+
         // Create a label describing script use
         this.description = new Gtk.Label({
             label: _(`

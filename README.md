@@ -17,3 +17,13 @@ Installation
 ============
 
 Install it from the [extensions site](https://extensions.gnome.org/extension/770/force-quit/)
+
+
+Developing
+==========
+
+Pack using
+
+```shell
+gnome-extensions pack --podir=po --extra-source=icons --extra-source=convenience.js --extra-source=display_module.js --extra-source=selection.js --extra-source=utilnotify.js
+```
