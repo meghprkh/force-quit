@@ -5,7 +5,7 @@ import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/
 
 export default class ForceQuitPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-
+        const _ = this.gettext.bind(this);
         this.settings = this.getSettings();
         
         // Create a preferences page
@@ -14,15 +14,15 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
         
         // Create a preferences group
         const group = new Adw.PreferencesGroup({
-            title: 'Appearance',
-            description: 'Configure the extension appearance',
+            title: _('Appearance'),
+            description: _('Configure the extension appearance'),
         });
         page.add(group);
         
         // Create a switch row to hide the button
         this.switchRow = new Adw.SwitchRow({
-            title: 'Hide Status Bar Button',
-            subtitle: 'Hide the Force Quit button from the top panel',
+            title: _('Hide Status Bar Button'),
+            subtitle: _('Hide the Force Quit button from the top panel'),
         });
         group.add(this.switchRow);
         
@@ -36,15 +36,15 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
 
         // Create another row with two toggles for the button position
         const toggleRow = new Adw.ActionRow({
-            title: 'Button position',
-            subtitle: 'Where to place the button on the top panel'
+            title: _('Button position'),
+            subtitle: _('Where to place the button on the top panel')
         });
         group.add(toggleRow);
         this.toggleGroup = new Adw.ToggleGroup({ 'can-shrink': true });
         toggleRow.add_suffix(this.toggleGroup);
-        const leftToggle = new Adw.Toggle({ name: 'left', label:'Left' });
+        const leftToggle = new Adw.Toggle({ name: 'left', label: _('Left') });
         this.toggleGroup.add(leftToggle);
-        const rightToggle = new Adw.Toggle({ name: 'right', label: 'Right' });
+        const rightToggle = new Adw.Toggle({ name: 'right', label: _('Right') });
         this.toggleGroup.add(rightToggle);
     
         // Bind the switch to the setting
@@ -57,7 +57,7 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
     
         // Create a label describing script use
         this.description = new Gtk.Label({
-            label: `
+            label: _(`
 With the button hidden, the extension can still be launched from scripts via DBus:
 <tt>
  gdbus call \\
@@ -65,7 +65,7 @@ With the button hidden, the extension can still be launched from scripts via DBu
    --dest org.gnome.Shell \\
    --object-path /org/gnome/Shell/Extensions/ForceQuit \\
    --method org.gnome.Shell.Extensions.ForceQuit.SelectWindow
-</tt>`,
+</tt>`),
             use_markup: true,
             wrap: true,
             xalign: 0.15

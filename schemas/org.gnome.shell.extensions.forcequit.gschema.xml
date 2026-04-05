@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.gnome.shell.extensions.forcequit" path="/org/gnome/shell/extensions/forcequit/">
+  <schema id="org.gnome.shell.extensions.forcequit" path="/org/gnome/shell/extensions/forcequit/" gettext-domain="fq@megh">
     <key name="hide-button" type="b">
       <default>false</default>
       <summary>Hide Status Bar Button</summary>
