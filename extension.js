@@ -2,6 +2,7 @@
 
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -23,7 +24,7 @@ const ButtonName = "ForceQuitButton";
 let ForceQuitButton = GObject.registerClass(
 class ForceQuitButton extends PanelMenu.Button {
     _init(extensionPath) {
-        super._init(0.0, ButtonName)
+        super._init(0.0, ButtonName, true)
 
         this._extensionPath = extensionPath;
 
@@ -34,9 +35,11 @@ class ForceQuitButton extends PanelMenu.Button {
         });
         this.add_child(icon);
 
-        this.connect("button-press-event", () => {
+        this._clickGesture = new Clutter.ClickGesture();
+        this._clickGesture.connect('recognize', () => {
             new Selection.SelectionWindow();
         });
+        this.add_action(this._clickGesture);
     }
 
     _getCustIcon(icon_name) {
@@ -57,7 +60,7 @@ export default class ForceQuitExtension extends Extension {
         this._settingsChangedId = this._settings.connect('changed::hide-button',
             () => this._updateButtonVisibility()
         );
-  
+
         // Position the button on the top panel
         if (this._settings.get_string('button-position') == 'left')
             Main.panel.addToStatusArea(ButtonName, this._button, 3, 'left');
@@ -98,4 +101,3 @@ export default class ForceQuitExtension extends Extension {
             this._button.show();
     }
 }
-
