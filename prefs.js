@@ -66,6 +66,7 @@ With the button hidden, the extension can still be launched from scripts via DBu
    --object-path /org/gnome/Shell/Extensions/ForceQuit \\
    --method org.gnome.Shell.Extensions.ForceQuit.SelectWindow
 </tt>`),
+            selectable: true,
             use_markup: true,
             wrap: true,
             xalign: 0.15
