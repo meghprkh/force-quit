@@ -41,7 +41,6 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 
 import * as Lib from './convenience.js';
 import * as UtilNotify from './utilnotify.js';
-import {DisplayApi} from './display_module.js';
 
 /**
  * @type {Capture}
@@ -93,14 +92,14 @@ class Capture extends Signals.EventEmitter {
      * @private
      */
     _setDefaultCursor() {
-        DisplayApi.set_cursor(Meta.Cursor.DEFAULT);
+        this._areaSelection.set_cursor_type(Clutter.CursorType.DEFAULT);
     }
 
     /**
      * @private
      */
     _setCaptureCursor() {
-        DisplayApi.set_cursor(Meta.Cursor.CROSSHAIR);
+        this._areaSelection.set_cursor_type(Clutter.CursorType.CROSSHAIR);
     }
 
     /**

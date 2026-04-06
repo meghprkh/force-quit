@@ -3,8 +3,8 @@
   "name": "Force Quit",
   "gettext-domain": "fq@megh",
   "settings-schema": "org.gnome.shell.extensions.forcequit",
-  "shell-version": ["46", "47", "48", "49"],
+  "shell-version": ["50"],
   "url": "https://github.com/meghprkh/force-quit/",
   "uuid": "fq@megh",
-  "version": 38
+  "version": 46
 }

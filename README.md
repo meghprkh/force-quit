@@ -25,5 +25,5 @@ Developing
 Pack using
 
 ```shell
-gnome-extensions pack --podir=po --extra-source=icons --extra-source=convenience.js --extra-source=display_module.js --extra-source=selection.js --extra-source=utilnotify.js
+gnome-extensions pack --podir=po --extra-source=icons --extra-source=convenience.js --extra-source=selection.js --extra-source=utilnotify.js
 ```
