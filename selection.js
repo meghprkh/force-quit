@@ -25,13 +25,12 @@ This file has been copied from EasyScreenCast/selection.js [1], with minimal
 edits. Edits include right-click aborting, force-quitting, and renaming
 of classes. Also removed classes SelectionArea, SelectionDesktop & AreaRecording
 
-[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/3922633/selection.js
+[1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/b4de2a8/selection.js
 */
 
 'use strict';
 
 import GObject from 'gi://GObject';
-import Meta from 'gi://Meta';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';

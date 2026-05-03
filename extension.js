@@ -37,7 +37,7 @@ class ForceQuitButton extends PanelMenu.Button {
 
         this._clickGesture = new Clutter.ClickGesture();
         this._clickGesture.connect('recognize', () => {
-            new Selection.SelectionWindow();
+            this._selection = new Selection.SelectionWindow();
         });
         this.add_action(this._clickGesture);
     }
@@ -68,7 +68,7 @@ export default class ForceQuitExtension extends Extension {
             Main.panel.addToStatusArea(ButtonName, this._button);
 
         // Redraw button on position change
-        this._settings.connect('changed::button-position', () => {
+        this._buttonPositionChangedId = this._settings.connect('changed::button-position', () => {
             this.disable();
             this.enable();
         });
@@ -83,15 +83,21 @@ export default class ForceQuitExtension extends Extension {
              this._settings.disconnect(this._settingsChangedId);
              this._settingsChangedId = null;
         }
+        if (this._buttonPositionChangedId) {
+             this._settings.disconnect(this._buttonPositionChangedId);
+             this._buttonPositionChangedId = null;
+        }
         this._dbus?.unexport();
         this._dbus = null;
         this._button?.destroy();
         this._button = null;
         this._settings = null;
+        this._selection?.destroy();
+        this._selection = null;
     }
 
     SelectWindow() {
-        new Selection.SelectionWindow();
+        this._selection = new Selection.SelectionWindow();
     }
 
     _updateButtonVisibility() {

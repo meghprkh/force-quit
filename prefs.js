@@ -75,6 +75,10 @@ With the button hidden, the extension can still be launched from scripts via DBu
 
         this._updateVisibility();
         this.settings.connect('changed::hide-button', () => this._updateVisibility());
+
+        window.connect('close-request', () => {
+            this.settings.disconnect_all();
+        })
     }
 
     // Grey out toggleGroup and show description when button is hidden
