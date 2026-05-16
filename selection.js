@@ -227,6 +227,7 @@ export class SelectionWindow extends Signals.EventEmitter {
                 this._selectedWindow.get_meta_window().kill()
                 this._capture._stop();
             }
+            this.emit("stop");
         }
     }
 

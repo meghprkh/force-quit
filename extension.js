@@ -92,7 +92,6 @@ export default class ForceQuitExtension extends Extension {
         this._button?.destroy();
         this._button = null;
         this._settings = null;
-        this._selection?.destroy();
         this._selection = null;
     }
 
