@@ -50,6 +50,7 @@ class Capture extends Signals.EventEmitter {
         Lib.TalkativeLog('-£-capture selection init');
 
         this._mouseDown = false;
+        this._destroyed = false;
 
         this.monitor = Main.layoutManager.focusMonitor;
 
@@ -108,8 +109,10 @@ class Capture extends Signals.EventEmitter {
      */
     _onCaptureEvent(actor, event) {
         if (event.type() === Clutter.EventType.KEY_PRESS) {
-            if (event.get_key_symbol() === Clutter.KEY_Escape)
-                this._stop();
+            if (event.get_key_symbol() === Clutter.KEY_Escape) {
+                this.destroy();
+                return;
+            }
         }
 
         this.emit('captured-event', event);
@@ -126,6 +129,9 @@ class Capture extends Signals.EventEmitter {
      * @param {boolean} showResolution whether to display the size of the selected area
      */
     drawSelection({x, y, w, h}, showResolution) {
+        if (this._destroyed)
+            return;
+
         this._areaSelection.set_position(x, y);
         this._areaSelection.set_size(w, h);
 
@@ -157,17 +163,38 @@ class Capture extends Signals.EventEmitter {
     }
 
     /**
-     * @private
+     * Removes the actors and the modal grab created by this capture.
+     *
+     * Safe to call more than once: only the first call does the teardown.
      */
-    _stop() {
-        Lib.TalkativeLog('-£-capture selection stop');
+    destroy() {
+        if (this._destroyed)
+            return;
 
-        this._areaSelection.disconnect(this._signalCapturedEvent);
+        this._destroyed = true;
+        Lib.TalkativeLog('-£-capture selection destroy');
+
+        if (this._signalCapturedEvent) {
+            this._areaSelection.disconnect(this._signalCapturedEvent);
+            this._signalCapturedEvent = null;
+        }
+
         this._setDefaultCursor();
         Main.uiGroup.remove_child(this._areaSelection);
-        Main.popModal(this._grab);
-        Main.uiGroup.remove_child(this._areaResolution);
         this._areaSelection.destroy();
+        this._areaSelection = null;
+
+        if (this._grab) {
+            Main.popModal(this._grab);
+            this._grab = null;
+        }
+
+        Main.uiGroup.remove_child(this._areaResolution);
+        this._areaResolution.destroy();
+        this._areaResolution = null;
+
+        this.monitor = null;
+
         this.emit('stop');
         this.disconnectAll();
     }
@@ -191,6 +218,9 @@ class Capture extends Signals.EventEmitter {
  *
  * The subclasses only pass their log tag and gettext alert message here, and
  * keep the fields and the event handling that differ between them.
+ *
+ * The teardown is split in two: destroy() releases the shared objects exactly
+ * once, and the subclasses release the fields they own in _releaseFields().
  */
 class SelectionBase extends Signals.EventEmitter {
     /**
@@ -201,16 +231,63 @@ class SelectionBase extends Signals.EventEmitter {
         super();
         Lib.TalkativeLog(`-£-${kind} selection init`);
 
+        this._destroyed = false;
         this._kind = kind;
         this._capture = new Capture();
-        this._capture.connect('captured-event', this._onEvent.bind(this));
-        this._capture.connect('stop', () => {
-            this._ctrlNotify?.resetAlert();
-            this.emit('stop');
-        });
+        this._signalCaptureEvent = this._capture.connect(
+            'captured-event',
+            this._onEvent.bind(this)
+        );
+        this._signalCaptureStop = this._capture.connect('stop', () => this.destroy());
 
         this._ctrlNotify = new UtilNotify.NotifyManager();
         this._ctrlNotify.createAlert(alert);
+    }
+
+    /**
+     * Tears down the selection: disconnects the capture signals, destroys the
+     * capture (highlight rectangle, modal grab), removes the alert shown to the
+     * user and releases the fields owned by the subclass.
+     *
+     * Safe to call more than once: only the first call does the teardown.
+     */
+    destroy() {
+        if (this._destroyed)
+            return;
+
+        this._destroyed = true;
+        Lib.TalkativeLog(`-£-${this._kind} selection destroy`);
+
+        // disconnect before destroying the capture, so that its 'stop' emission
+        // cannot re-enter this method
+        if (this._signalCaptureEvent) {
+            this._capture?.disconnect(this._signalCaptureEvent);
+            this._signalCaptureEvent = null;
+        }
+        if (this._signalCaptureStop) {
+            this._capture?.disconnect(this._signalCaptureStop);
+            this._signalCaptureStop = null;
+        }
+
+        this._capture?.destroy();
+        this._capture = null;
+
+        this._ctrlNotify?.resetAlert();
+        this._ctrlNotify = null;
+
+        this._releaseFields();
+
+        this.emit('stop');
+        this.disconnectAll();
+    }
+
+    /**
+     * Releases the fields owned by the subclass; called once from destroy().
+     *
+     * @private
+     */
+    _releaseFields() {
+        // the base selection owns no other field
     }
 }
 
@@ -218,7 +295,16 @@ class SelectionWindow extends SelectionBase {
     constructor() {
         super('window', _('Select a window to kill or press [ESC] to abort'));
 
+        this._selectedWindow = null;
         this._windows = global.get_window_actors();
+    }
+
+    /**
+     * @private
+     */
+    _releaseFields() {
+        this._selectedWindow = null;
+        this._windows = null;
     }
 
     /**
@@ -227,6 +313,9 @@ class SelectionWindow extends SelectionBase {
      * @private
      */
     _onEvent(capture, event) {
+        if (this._destroyed)
+            return;
+
         let type = event.type();
         let [x, y] = global.get_pointer();
 
@@ -239,13 +328,10 @@ class SelectionWindow extends SelectionBase {
 
 
         if (type === Clutter.EventType.BUTTON_PRESS) {
-            if (event.get_button() === Clutter.BUTTON_SECONDARY) {
-                this._capture._stop();
-            } else if (this._selectedWindow) {
+            if (event.get_button() !== Clutter.BUTTON_SECONDARY && this._selectedWindow)
                 this._selectedWindow.get_meta_window().kill();
-                this._capture._stop();
-            }
-            this.emit('stop');
+
+            this.destroy();
         }
     }
 

@@ -27,6 +27,7 @@ class ForceQuitButton extends PanelMenu.Button {
         super._init(0.0, ButtonName, true);
 
         this._extensionPath = extensionPath;
+        this._selection = null;
 
         let icon = new St.Icon({
             // icon_name: 'window-close',
@@ -36,10 +37,31 @@ class ForceQuitButton extends PanelMenu.Button {
         this.add_child(icon);
 
         this._clickGesture = new Clutter.ClickGesture();
-        this._clickGesture.connect('recognize', () => {
-            this._selection = new Selection.SelectionWindow();
+        this._recognizeId = this._clickGesture.connect('recognize', () => {
+            this._startSelection();
         });
         this.add_action(this._clickGesture);
+
+        this.connect('destroy', this._onDestroy.bind(this));
+    }
+
+    _startSelection() {
+        // Never leave a previous selection (and its modal grab) behind.
+        this._selection?.destroy();
+        this._selection = new Selection.SelectionWindow();
+    }
+
+    _onDestroy() {
+        this._selection?.destroy();
+        this._selection = null;
+
+        if (this._recognizeId) {
+            this._clickGesture.disconnect(this._recognizeId);
+            this._recognizeId = null;
+        }
+
+        this._clickGesture = null;
+        this._extensionPath = null;
     }
 
     _getCustIcon(iconName) {
@@ -89,13 +111,16 @@ export default class ForceQuitExtension extends Extension {
         }
         this._dbus?.unexport();
         this._dbus = null;
+        this._selection?.destroy();
+        this._selection = null;
         this._button?.destroy();
         this._button = null;
         this._settings = null;
-        this._selection = null;
     }
 
     SelectWindow() {
+        // Never leave a previous selection (and its modal grab) behind.
+        this._selection?.destroy();
         this._selection = new Selection.SelectionWindow();
     }
 
