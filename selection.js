@@ -23,14 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /*
 This file has been copied from EasyScreenCast/selection.js [1], with minimal
 edits. Edits include right-click aborting, force-quitting, and renaming
-of classes. Also removed classes SelectionArea, SelectionDesktop & AreaRecording
+of classes. Also removed classes SelectionArea, SelectionDesktop &
+AreaRecording, and _getRectangle(), which only the area selection used.
 
 [1]: https://github.com/EasyScreenCast/EasyScreenCast/blob/b4de2a8/selection.js
 */
 
 'use strict';
 
-import GObject from 'gi://GObject';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -224,10 +224,10 @@ export class SelectionWindow extends Signals.EventEmitter {
             if (event.get_button() === Clutter.BUTTON_SECONDARY) {
                 this._capture._stop();
             } else if (this._selectedWindow) {
-                this._selectedWindow.get_meta_window().kill()
+                this._selectedWindow.get_meta_window().kill();
                 this._capture._stop();
             }
-            this.emit("stop");
+            this.emit('stop');
         }
     }
 
@@ -252,22 +252,6 @@ export class SelectionWindow extends Signals.EventEmitter {
     toString() {
         return this.GTypeName;
     }
-}
-
-/**
- * @param {number} x1 left position
- * @param {number} y1 top position
- * @param {number} x2 right position
- * @param {number} y2 bottom position
- * @returns {{x: number, y: number, w: number, h: number}}
- */
-function _getRectangle(x1, y1, x2, y2) {
-    return {
-        x: Math.min(x1, x2),
-        y: Math.min(y1, y2),
-        w: Math.abs(x1 - x2),
-        h: Math.abs(y1 - y2),
-    };
 }
 
 /**

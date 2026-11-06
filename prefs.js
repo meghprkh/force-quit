@@ -1,11 +1,10 @@
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
-import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
+import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class ForceQuitPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-
         this.settings = this.getSettings();
 
         // Create a preferences page
@@ -40,11 +39,11 @@ export default class ForceQuitPreferences extends ExtensionPreferences {
             subtitle: _('Where to place the button on the top panel'),
         });
         group.add(toggleRow);
-        this.toggleGroup = new Adw.ToggleGroup({ 'can-shrink': true });
+        this.toggleGroup = new Adw.ToggleGroup({'can-shrink': true});
         toggleRow.add_suffix(this.toggleGroup);
-        const leftToggle = new Adw.Toggle({ name: 'left', label: _('Left') });
+        const leftToggle = new Adw.Toggle({name: 'left', label: _('Left')});
         this.toggleGroup.add(leftToggle);
-        const rightToggle = new Adw.Toggle({ name: 'right', label: _('Right') });
+        const rightToggle = new Adw.Toggle({name: 'right', label: _('Right')});
         this.toggleGroup.add(rightToggle);
 
         // Bind the switch to the setting
@@ -69,7 +68,7 @@ With the button hidden, the extension can still be launched from scripts via DBu
             selectable: true,
             use_markup: true,
             wrap: true,
-            xalign: 0.15
+            xalign: 0.15,
         });
         group.add(this.description);
 
@@ -78,7 +77,7 @@ With the button hidden, the extension can still be launched from scripts via DBu
 
         window.connect('close-request', () => {
             this.settings.disconnect_all();
-        })
+        });
     }
 
     // Grey out toggleGroup and show description when button is hidden

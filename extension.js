@@ -19,19 +19,19 @@ const DBusInterface = `
   </interface>
 </node>`;
 
-const ButtonName = "ForceQuitButton";
+const ButtonName = 'ForceQuitButton';
 
 let ForceQuitButton = GObject.registerClass(
 class ForceQuitButton extends PanelMenu.Button {
     _init(extensionPath) {
-        super._init(0.0, ButtonName, true)
+        super._init(0.0, ButtonName, true);
 
         this._extensionPath = extensionPath;
 
         let icon = new St.Icon({
             // icon_name: 'window-close',
-            gicon: this._getCustIcon("force-quit-symbolic"),
-            style_class: "system-status-icon",
+            gicon: this._getCustIcon('force-quit-symbolic'),
+            style_class: 'system-status-icon',
         });
         this.add_child(icon);
 
@@ -42,9 +42,9 @@ class ForceQuitButton extends PanelMenu.Button {
         this.add_action(this._clickGesture);
     }
 
-    _getCustIcon(icon_name) {
+    _getCustIcon(iconName) {
         let gicon = Gio.icon_new_for_string(
-            `${this._extensionPath}/icons/${icon_name}.svg`
+            `${this._extensionPath}/icons/${iconName}.svg`
         );
         return gicon;
     }
@@ -62,7 +62,7 @@ export default class ForceQuitExtension extends Extension {
         );
 
         // Position the button on the top panel
-        if (this._settings.get_string('button-position') == 'left')
+        if (this._settings.get_string('button-position') === 'left')
             Main.panel.addToStatusArea(ButtonName, this._button, 3, 'left');
         else
             Main.panel.addToStatusArea(ButtonName, this._button);
@@ -80,12 +80,12 @@ export default class ForceQuitExtension extends Extension {
 
     disable() {
         if (this._settingsChangedId) {
-             this._settings.disconnect(this._settingsChangedId);
-             this._settingsChangedId = null;
+            this._settings.disconnect(this._settingsChangedId);
+            this._settingsChangedId = null;
         }
         if (this._buttonPositionChangedId) {
-             this._settings.disconnect(this._buttonPositionChangedId);
-             this._buttonPositionChangedId = null;
+            this._settings.disconnect(this._buttonPositionChangedId);
+            this._buttonPositionChangedId = null;
         }
         this._dbus?.unexport();
         this._dbus = null;
