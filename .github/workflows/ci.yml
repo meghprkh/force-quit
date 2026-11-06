@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+
+    # gnome-extensions lives in gnome-shell; only its runtime libs are needed,
+    # and --no-install-recommends keeps the session, browser and wallpaper
+    # recommends out of the runner.
+    - name: Install gnome-shell and gettext
+      run: |
+        sudo apt-get update
+        sudo apt-get install --no-install-recommends gnome-shell gettext
+
+    - name: Build the extension zip
+      run: make pack
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v10.3.3
+      with:
+        python-version: '3.14'
+        enable-cache: true
+
+    # EGO's review linter, fed the zip above: a bare checkout trips EGO-P-005/006
+    # on files that never ship (README, LICENSE). Advisory: continue-on-error,
+    # so it reports without blocking. tree-sitter >= 0.26 segfaults this shexli
+    # on our files - bump the two together.
+    - name: shexli
+      continue-on-error: true
+      run: uvx --with 'tree-sitter<0.26' shexli --format text fq@megh.shell-extension.zip
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: force-quit
+        path: fq@megh.shell-extension.zip
