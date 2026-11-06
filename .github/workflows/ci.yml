@@ -14,13 +14,22 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
-    # gnome-extensions lives in gnome-shell; only its runtime libs are needed,
-    # and --no-install-recommends keeps the session, browser and wallpaper
-    # recommends out of the runner.
-    - name: Install gnome-shell and gettext
+    # gnome-extensions is a 105 KB native binary that gnome-shell ships next to
+    # the shell itself, so installing the package drags in gjs/libmozjs,
+    # mutter, GTK4, gnome-control-center and the wallpapers - ~30 MB a packing
+    # step never uses, and apt cannot install one half of a package. Extract
+    # the binary and install only the libraries it links that the runner lacks.
+    - name: Install gnome-extensions and gettext
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends gnome-shell gettext
+        sudo apt-get install --no-install-recommends gettext \
+          libgnome-autoar-0-0 libjson-glib-1.0-0 libsoup-3.0-0
+        cd "$RUNNER_TEMP"
+        apt-get download gnome-shell
+        dpkg -x gnome-shell_*.deb gnome-shell-root
+        # fail here, not three steps later, if a library is missing
+        ./gnome-shell-root/usr/bin/gnome-extensions --version
+        echo "$RUNNER_TEMP/gnome-shell-root/usr/bin" >> "$GITHUB_PATH"
 
     - name: Use Node.js 24
       uses: actions/setup-node@v6
