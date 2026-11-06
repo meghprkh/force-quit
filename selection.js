@@ -328,10 +328,15 @@ class SelectionWindow extends SelectionBase {
 
 
         if (type === Clutter.EventType.BUTTON_PRESS) {
-            if (event.get_button() !== Clutter.BUTTON_SECONDARY && this._selectedWindow)
-                this._selectedWindow.get_meta_window().kill();
-
-            this.destroy();
+            try {
+                // kill before the teardown, which releases _selectedWindow
+                if (event.get_button() !== Clutter.BUTTON_SECONDARY && this._selectedWindow)
+                    this._selectedWindow.get_meta_window().kill();
+            } finally {
+                // release the highlight, the alert and the modal grab even if
+                // the window was already gone
+                this.destroy();
+            }
         }
     }
 
