@@ -22,6 +22,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install --no-install-recommends gnome-shell gettext
 
+    - name: Use Node.js 24
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+    - run: npm install --no-audit --no-fund
+    - run: npm run lint
+
     - name: Build the extension zip
       run: make pack
 

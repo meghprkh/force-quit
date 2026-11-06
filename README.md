@@ -22,6 +22,13 @@ Install it from the [extensions site](https://extensions.gnome.org/extension/770
 Developing
 ==========
 
+Lint with
+
+```shell
+npm install
+npm run lint
+```
+
 Pack into `fq@megh.shell-extension.zip` with
 
 ```shell

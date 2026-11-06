@@ -1,2 +1,7 @@
 # Output of `make pack`
 *.shell-extension.zip
+
+node_modules/
+
+# No dependency lockfile is kept: CI resolves the eslint major on each run.
+package-lock.json

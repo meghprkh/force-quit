@@ -1,0 +1,25 @@
+{
+  "name": "force-quit",
+  "version": "0.0.0",
+  "description": "Adds a force quit button to the GNOME Shell panel.",
+  "type": "module",
+  "main": "extension.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meghprkh/force-quit.git"
+  },
+  "author": "Megh Parikh",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/meghprkh/force-quit/issues"
+  },
+  "homepage": "https://github.com/meghprkh/force-quit#readme",
+  "devDependencies": {
+    "@eslint/js": "^10",
+    "eslint": "^10",
+    "globals": "^17"
+  }
+}

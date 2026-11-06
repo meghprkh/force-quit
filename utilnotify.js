@@ -29,6 +29,12 @@ import * as Lib from './convenience.js';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
+// EasyScreenCast gates the alert on a settings option
+// (SHOW_NOTIFY_ALERT_SETTING_KEY); this fork has no such option, so the alert
+// is always shown. Kept as an `if` so the rest of createAlert() matches
+// EasyScreenCast line for line.
+const SHOW_NOTIFY_ALERT = true;
+
 /**
  * @type {NotifyManager}
  */
@@ -103,7 +109,7 @@ export const NotifyManager = GObject.registerClass({
      */
     createAlert(msg) {
         Lib.TalkativeLog(`-°-show alert tweener : ${msg}`);
-        if (true) {
+        if (SHOW_NOTIFY_ALERT) {
             var monitor = Main.layoutManager.focusMonitor;
 
             this.resetAlert();

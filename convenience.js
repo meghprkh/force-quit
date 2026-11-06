@@ -33,11 +33,14 @@ edits, primary deletions. Edits include only keeping TalkativeLog.
 
 'use strict';
 
+// Flip to true for verbose logging while debugging.
+const DEBUG = false;
+
 /**
  * @param {string} msg the message to log
  * @class
  */
 export function TalkativeLog(msg) {
-    if (false)
+    if (DEBUG)
         console.log(`[ESC]${msg}`);
 }
