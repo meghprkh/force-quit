@@ -184,7 +184,7 @@ class Capture extends Signals.EventEmitter {
     }
 }
 
-export class SelectionWindow extends Signals.EventEmitter {
+class SelectionWindow extends Signals.EventEmitter {
     constructor() {
         super();
         Lib.TalkativeLog('-£-window selection init');
@@ -303,3 +303,5 @@ function _selectWindow(windows, x, y) {
 
     return filtered[0];
 }
+
+export {SelectionWindow};
