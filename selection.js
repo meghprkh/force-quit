@@ -52,8 +52,6 @@ class Capture extends Signals.EventEmitter {
         this._mouseDown = false;
         this._destroyed = false;
 
-        this.monitor = Main.layoutManager.focusMonitor;
-
         this._areaSelection = new St.Widget({
             name: 'area-selection',
             style_class: 'area-selection',
@@ -193,21 +191,8 @@ class Capture extends Signals.EventEmitter {
         this._areaResolution.destroy();
         this._areaResolution = null;
 
-        this.monitor = null;
-
         this.emit('stop');
         this.disconnectAll();
-    }
-
-    _saveRect(x, y, h, w) {
-        Lib.TalkativeLog(`-£-selection x:${x} y:${y} height:${h} width:${w}`);
-
-        // Ext.Indicator.saveSelectedRect(x, y, h, w);
-        // Ext.Indicator._doDelayAction();
-    }
-
-    toString() {
-        return this.GTypeName;
     }
 }
 
@@ -219,8 +204,9 @@ class Capture extends Signals.EventEmitter {
  * The subclasses only pass their log tag and gettext alert message here, and
  * keep the fields and the event handling that differ between them.
  *
- * The teardown is split in two: destroy() releases the shared objects exactly
- * once, and the subclasses release the fields they own in _releaseFields().
+ * The subclasses initialise the fields they own in _initFields(), which runs
+ * before the capture is created, and release them in _releaseFields(), which
+ * runs once from destroy().
  */
 class SelectionBase extends Signals.EventEmitter {
     /**
@@ -233,6 +219,7 @@ class SelectionBase extends Signals.EventEmitter {
 
         this._destroyed = false;
         this._kind = kind;
+        this._initFields();
         this._capture = new Capture();
         this._signalCaptureEvent = this._capture.connect(
             'captured-event',
@@ -282,6 +269,16 @@ class SelectionBase extends Signals.EventEmitter {
     }
 
     /**
+     * Initialises the fields owned by the subclass; called once from the
+     * constructor, before the capture is created.
+     *
+     * @private
+     */
+    _initFields() {
+        // the base selection owns no other field
+    }
+
+    /**
      * Releases the fields owned by the subclass; called once from destroy().
      *
      * @private
@@ -294,7 +291,12 @@ class SelectionBase extends Signals.EventEmitter {
 class SelectionWindow extends SelectionBase {
     constructor() {
         super('window', _('Select a window to kill or press [ESC] to abort'));
+    }
 
+    /**
+     * @private
+     */
+    _initFields() {
         this._selectedWindow = null;
         this._windows = global.get_window_actors();
     }
@@ -356,10 +358,6 @@ class SelectionWindow extends SelectionBase {
     _clearHighlight() {
         Lib.TalkativeLog('-£-window highlight off');
         this._capture.clearSelection();
-    }
-
-    toString() {
-        return this.GTypeName;
     }
 }
 
