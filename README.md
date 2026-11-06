@@ -22,8 +22,12 @@ Install it from the [extensions site](https://extensions.gnome.org/extension/770
 Developing
 ==========
 
-Pack using
+Pack into `fq@megh.shell-extension.zip` with
 
 ```shell
-gnome-extensions pack --podir=po --extra-source=icons --extra-source=convenience.js --extra-source=selection.js --extra-source=utilnotify.js
+make pack
 ```
+
+It wraps `gnome-extensions pack` from gnome-shell, so that and gettext need to
+be installed; it builds the bundle exactly the way the extension site expects.
+The CI workflow runs the same target before shexli.
