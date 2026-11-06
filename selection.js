@@ -184,23 +184,41 @@ class Capture extends Signals.EventEmitter {
     }
 }
 
-class SelectionWindow extends Signals.EventEmitter {
-    constructor() {
+/**
+ * Lifecycle shared by the selections: the Capture (highlight rectangle, modal
+ * grab and captured-event signal) and the alert label telling the user what to
+ * do.
+ *
+ * The subclasses only pass their log tag and gettext alert message here, and
+ * keep the fields and the event handling that differ between them.
+ */
+class SelectionBase extends Signals.EventEmitter {
+    /**
+     * @param {string} kind short tag used in the debug log
+     * @param {string} alert message shown to the user while selecting
+     */
+    constructor(kind, alert) {
         super();
-        Lib.TalkativeLog('-£-window selection init');
+        Lib.TalkativeLog(`-£-${kind} selection init`);
 
-        this._windows = global.get_window_actors();
+        this._kind = kind;
         this._capture = new Capture();
         this._capture.connect('captured-event', this._onEvent.bind(this));
         this._capture.connect('stop', () => {
-            this._ctrlNotify.resetAlert();
+            this._ctrlNotify?.resetAlert();
             this.emit('stop');
         });
 
         this._ctrlNotify = new UtilNotify.NotifyManager();
-        this._ctrlNotify.createAlert(
-            _('Select a window to kill or press [ESC] to abort')
-        );
+        this._ctrlNotify.createAlert(alert);
+    }
+}
+
+class SelectionWindow extends SelectionBase {
+    constructor() {
+        super('window', _('Select a window to kill or press [ESC] to abort'));
+
+        this._windows = global.get_window_actors();
     }
 
     /**
